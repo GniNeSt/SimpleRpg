@@ -1,0 +1,4 @@
+Index∫StageName∫MapName∫Rank∫Size
+1∫모험의 시작∫Map1∫Very Easy∫Small
+2∫라이벌 등장∫Map2∫Easy∫Big
+3∫새로운 만남∫Map3∫Normal∫Small
