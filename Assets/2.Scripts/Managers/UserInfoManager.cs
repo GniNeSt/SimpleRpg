@@ -78,5 +78,8 @@ public class UserInfoManager : TSingleTon<UserInfoManager>
 
         return next;
     }
-    
+    public void SettingPlayerAvatar(PlayerCtrlObj obj)
+    {
+
+    }
 }

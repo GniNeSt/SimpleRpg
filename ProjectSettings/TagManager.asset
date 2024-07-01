@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Dummy
+  - MapRoot
+  - SpawnPlayerPos
+  - Monster
   layers:
   - Default
   - TransparentFX

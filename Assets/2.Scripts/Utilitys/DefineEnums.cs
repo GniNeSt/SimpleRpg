@@ -7,7 +7,8 @@ namespace DefineEnums
     public enum TableName
     {
         LevelUpTable,
-        StageInfoTable
+        StageInfoTable,
+        MonsterInfoTable
     }
     public enum PlayerAnimState
     {
@@ -16,9 +17,19 @@ namespace DefineEnums
         ATTACK,
         SKILL,
 
-
+        WALK,
+        BATTLEIDLE,
+        GOBACK,
 
         DEATH,
         init
+    }
+
+    public enum Rank
+    {
+        Normal,
+        Rare,
+        Elite,
+        Boss
     }
 }

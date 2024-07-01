@@ -234,6 +234,10 @@ public class PlayerCtrlObj : CharacterBase
     }
 
 
+    public override void OnHitting(CharacterBase attacker)
+    {
+
+    }
 
     //private void OnGUI()
     //{

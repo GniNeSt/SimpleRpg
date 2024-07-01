@@ -12,6 +12,8 @@ public class StageInfoTable : TableBase
         MapName,
         Rank,
         Size,
+        MapScene,
+        OptsName,
 
         max
     }
