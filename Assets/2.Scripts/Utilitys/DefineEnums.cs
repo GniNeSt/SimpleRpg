@@ -32,4 +32,10 @@ namespace DefineEnums
         Elite,
         Boss
     }
+    public enum RoamingType
+    {
+        RandomIndex,
+        Inorder,
+        BackNForth
+    }
 }
