@@ -48,6 +48,7 @@ public class MonsterCtrlObj : CharacterBase
         _aniController.SetBool("Battle", false);
         _aniController.SetBool("Walk", false);
         _aniController.SetBool("Run", false);
+        _aniController.SetBool("Attack", false);
         switch (curAnim)
         {
             case PlayerAnimState.DEATH:
@@ -57,6 +58,7 @@ public class MonsterCtrlObj : CharacterBase
                 _aniController.SetBool("Battle", true);
                 break;
             case PlayerAnimState.ATTACK:
+                _aniController.SetBool("Battle", true);
                 _aniController.SetBool("Attack",true);
                 break;
             case PlayerAnimState.WALK:
@@ -80,7 +82,7 @@ public class MonsterCtrlObj : CharacterBase
 
         if (GUI.Button(new Rect(0, 0, 570, 190), "Idle", style))
         {
-            animatorChange(PlayerAnimState.IDLE);
+            animatorChange(PlayerAnimState.init);
 
         }
         if (GUI.Button(new Rect(0, 190, 570, 190), "Run", style))
@@ -99,9 +101,9 @@ public class MonsterCtrlObj : CharacterBase
         {
             animatorChange(PlayerAnimState.DEATH);
         }
-        if (GUI.Button(new Rect(0, 950, 570, 190), "Init", style))
+        if (GUI.Button(new Rect(0, 950, 570, 190), "Walk", style))
         {
-            animatorChange(PlayerAnimState.init);
+            animatorChange(PlayerAnimState.WALK);
         }
     }
 
