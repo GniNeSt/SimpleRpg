@@ -7,6 +7,11 @@ public class SightCheckerObj : MonoBehaviour
     MonsterCtrlObj _owner;
     SphereCollider _checkCollider;
     Transform _seePos;
+
+    Vector3 gizmoDirection;
+    Vector3 gizmoPos;
+    Transform target;
+
     public void InitSet(MonsterCtrlObj owner, float sightDist, Transform see)
     {
         _owner = owner;
@@ -15,20 +20,21 @@ public class SightCheckerObj : MonoBehaviour
         _checkCollider.radius = sightDist;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Vector3 dir = other.transform.position - transform.position.normalized;
-            Ray r = new Ray(_seePos.position, dir);
+            Vector3 dir = other.transform.GetChild(0).position - _seePos.position;
             RaycastHit rHit;
-            if(Physics.Raycast(r, out rHit, _checkCollider.radius))
+            if(Physics.Raycast(_seePos.position, dir, out rHit, _checkCollider.radius))
             {
                 if (rHit.transform.CompareTag("Player"))
                 {
-                    // ¿¸≈ı
+                    _owner.OnDetect(rHit.transform);
                 }
             }
         }
+        
     }
+
 }

@@ -23,5 +23,13 @@ public class DamageCheckerObj : MonoBehaviour
         {
             Debug.LogFormat("{0}번 데미지존에 [{1}]충돌하였습니다.", _index, other.transform.name);
         }
+        if (other.CompareTag("Monster"))
+        {
+
+        }
+        if (other.CompareTag("Player"))
+        {
+
+        }
     }
 }
