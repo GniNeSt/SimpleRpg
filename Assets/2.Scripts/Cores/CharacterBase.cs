@@ -8,6 +8,10 @@ public abstract class CharacterBase : MonoBehaviour
     protected StatInformation _baseStat;
     protected int _nowHp;
 
+    public int Attack
+    {
+        get { return _baseStat._charAtt; }
+    }
 
     public bool _isDead { get; set; }
     protected void InitSetStat(AvatarInformatin info)

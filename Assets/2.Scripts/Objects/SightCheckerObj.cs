@@ -19,7 +19,10 @@ public class SightCheckerObj : MonoBehaviour
         _checkCollider = GetComponent<SphereCollider>();
         _checkCollider.radius = sightDist;
     }
-
+    public void EnableChecek()
+    {
+        _checkCollider.enabled = true;
+    }
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -31,6 +34,7 @@ public class SightCheckerObj : MonoBehaviour
                 if (rHit.transform.CompareTag("Player"))
                 {
                     _owner.OnDetect(rHit.transform);
+                    //checkcollider.enabled=false;
                 }
             }
         }

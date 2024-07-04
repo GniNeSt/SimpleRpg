@@ -29,7 +29,7 @@ public class MonsterCtrlObj : CharacterBase
     bool _isSelectedAct;    //time
 
     bool _inorder;
-
+    MiniMonInfoWnd _miniMoninfo;
     NavMeshAgent _navAgent;
     Animator _aniController;
     SightCheckerObj _sightChecker;
@@ -37,24 +37,26 @@ public class MonsterCtrlObj : CharacterBase
     List<Vector3> _goalPosList;
     Transform _targetObj;
     DamageCheckerObj[] _damageZoneObj;
-    private void Awake()
-    {
-        //임시
-        _navAgent = GetComponent<NavMeshAgent>();
-        _aniController = GetComponent<Animator>();
-        _sightChecker = GetComponentInChildren<SightCheckerObj>();
-        int cnt = transform.GetChild(2).GetChild(2).childCount;
-        _damageZoneObj = new DamageCheckerObj[cnt];
-        for (int n = 0; n < cnt; n++)
-        {
-            _damageZoneObj[n] = transform.GetChild(2).GetChild(2).GetChild(n).GetComponent<DamageCheckerObj>();
-            _damageZoneObj[n].InitSet(n, this);
-            _damageZoneObj[n].EnableChecker(false);
-        }
-        _seePos = transform.GetChild(2).GetChild(1);
-        _sightChecker.InitSet(this, _sightRange, _seePos);
-        //==
-    }
+    //private void Awake()
+    //{
+    //    //임시
+    //    _navAgent = GetComponent<NavMeshAgent>();
+    //    _aniController = GetComponent<Animator>();
+    //    _sightChecker = GetComponentInChildren<SightCheckerObj>();
+    //    int cnt = transform.GetChild(2).GetChild(2).childCount;
+    //    _damageZoneObj = new DamageCheckerObj[cnt];
+    //    for (int n = 0; n < cnt; n++)
+    //    {
+    //        _damageZoneObj[n] = transform.GetChild(2).GetChild(2).GetChild(n).GetComponent<DamageCheckerObj>();
+    //        _damageZoneObj[n].InitSet(n, this);
+    //        _damageZoneObj[n].EnableChecker(false);
+    //    }
+    //    _seePos = transform.GetChild(2).GetChild(1);
+    //    _sightChecker.InitSet(this, _sightRange, _seePos);
+
+    //    //setRommingPos(RoamingType.RandomIndex);
+    //    //==
+    //}
     private void Update()
     {
         if (_isDead) return;
@@ -118,6 +120,7 @@ public class MonsterCtrlObj : CharacterBase
                 Debug.Log("flollowDistacneEXit");
 
                 animatorChange(PlayerAnimState.GOBACK);
+                //sightCheckerobj.enablechecker();
                 _navAgent.SetDestination(_goalPosList[_nextPosIndex]);
                 _isSelectedAct = true;
             }
@@ -230,22 +233,25 @@ public class MonsterCtrlObj : CharacterBase
         return index;
     }
 
-    public void InitMonster(int level, string name, StatInformation info, Rank rank, RoamingType type)
+    public void InitMonster(int level, string name, StatInformation info, Rank rank, List<Vector3> posList, RoamingType type)
     {
+        _miniMoninfo = transform.GetChild(3).GetComponent<MiniMonInfoWnd>();
+        _miniMoninfo.InitOpen(name);
         InitSetStat(name, info);
 
         _level = level;
         _rank = rank;
-
+        _roamType = type;
         _navAgent = GetComponent<NavMeshAgent>();
         _aniController = GetComponent<Animator>();
         _sightChecker = GetComponentInChildren<SightCheckerObj>();
+        setRommingPos(posList, type);
         _seePos = transform.GetChild(2).GetChild(1);
         int cnt = transform.GetChild(2).GetChild(2).childCount;
         _damageZoneObj = new DamageCheckerObj[cnt];
         for (int n = 0; n < cnt; n++)
         {
-            _damageZoneObj[n] = transform.GetChild(2).GetChild(2).GetComponent<DamageCheckerObj>();
+            _damageZoneObj[n] = transform.GetChild(2).GetChild(2).GetChild(n).GetComponent<DamageCheckerObj>();
             _damageZoneObj[n].InitSet(n, this);
             _damageZoneObj[n].EnableChecker(false);
         }
@@ -255,7 +261,7 @@ public class MonsterCtrlObj : CharacterBase
     {
         if (_nowState == PlayerAnimState.GOBACK) return;
         _targetObj = target;
-        Debug.Log(target.name);
+        //Debug.Log(target.name);
         if (FirstAttack) return;
         _AttackStartPos = transform.position;
         if (Vector3.Distance(transform.position, _targetObj.position) > _attackRange)
@@ -265,7 +271,7 @@ public class MonsterCtrlObj : CharacterBase
         }
         else
         {
-            SetAttackType();
+            //SetAttackType();
             _navAgent.destination=_targetObj.position;
             animatorChange(PlayerAnimState.ATTACK);
         }
@@ -273,7 +279,16 @@ public class MonsterCtrlObj : CharacterBase
     }
     public override void OnHitting(CharacterBase attacker)
     {
+        //_nowHp -= attacker.Attack;
+        _nowHp -= 1;
+        float rate = (float)_nowHp / (float)_baseStat._charHP;
+        _miniMoninfo.SetHpRate(rate);
 
+        if(_nowHp <= 0)
+        {
+            animatorChange(PlayerAnimState.DEATH);
+            Destroy(gameObject, 4f);
+        }
     }
 
     void animatorChange(PlayerAnimState curAnim, bool isWait = false)
@@ -290,6 +305,7 @@ public class MonsterCtrlObj : CharacterBase
         {
             case PlayerAnimState.DEATH:
                 _aniController.SetTrigger("Die");
+                _isDead = true;
                 break;
             case PlayerAnimState.IDLE:
                 break;
@@ -328,54 +344,64 @@ public class MonsterCtrlObj : CharacterBase
         }
     }
 
-    public void ExcchangeActionToAni(PlayerAnimState state)
-    {
-        if (_isDead) return;
-        AllisableZone();
-        switch (state)
-        {
-            case PlayerAnimState.DEATH:
-                _aniController.SetTrigger("Dead");
-                break;
-            case PlayerAnimState.WALK:
-                _navAgent.speed = _walkSpeed;
-                _navAgent.angularSpeed = _nonCombatRotAngle;
-                _navAgent.stoppingDistance = 0;
-                break;
-            case PlayerAnimState.RUN:
-                _navAgent.speed = _runSpeed;
-                _navAgent.angularSpeed = _battleRotAngle;
-                _navAgent.stoppingDistance = _attackRange + 0.5f;
-                break;
-        }
+    //public void ExcchangeActionToAni(PlayerAnimState state)
+    //{
+    //    if (_isDead) return;
+    //    AllisableZone();
+    //    switch (state)
+    //    {
+    //        case PlayerAnimState.DEATH:
+    //            _aniController.SetTrigger("Dead");
+    //            break;
+    //        case PlayerAnimState.WALK:
+    //            _navAgent.speed = _walkSpeed;
+    //            _navAgent.angularSpeed = _nonCombatRotAngle;
+    //            _navAgent.stoppingDistance = 0;
+    //            break;
+    //        case PlayerAnimState.RUN:
+    //            _navAgent.speed = _runSpeed;
+    //            _navAgent.angularSpeed = _battleRotAngle;
+    //            _navAgent.stoppingDistance = _attackRange + 0.5f;
+    //            break;
+    //    }
 
-        _aniController.SetInteger("AniState", (int)state);
+    //    _aniController.SetInteger("AniState", (int)state);
 
-        _nowState = state;
-    }
-    public void setRommingPos(List<Vector3> posList)
+    //    _nowState = state;
+    //}
+    public void setRommingPos(List<Vector3> posList , RoamingType type)
     {
+        //임시
+        _roamType = type;
+        //
         _goalPosList = posList;
-        transform.position = _goalPosList[_nextPosIndex++];
+        if(_roamType == RoamingType.RandomIndex)
+        {
+            _nextPosIndex = GetNextIndex(_nextPosIndex);
+            transform.position = _goalPosList[_nextPosIndex];
+        }
+        else
+            transform.position = _goalPosList[_nextPosIndex++];
+        
         _navAgent.SetDestination(_goalPosList[_nextPosIndex]);
     }
     private void OnGUI()
     {
 
-        GUIStyle style = new GUIStyle("button");
-        style.fontSize = 60;
-        if (GUI.Button(new Rect(0, 0, 570, 190), "RandomIndex", style))
-        {
-            _roamType = RoamingType.RandomIndex;
-        }
-        if (GUI.Button(new Rect(0, 190, 570, 190), "Inorder", style))
-        {
-            _roamType = RoamingType.Inorder;
-        }
-        if (GUI.Button(new Rect(0, 380, 570, 190), "BackNForth", style))
-        {
-            _roamType = RoamingType.BackNForth;
-        }
+        //GUIStyle style = new GUIStyle("button");
+        //style.fontSize = 60;
+        //if (GUI.Button(new Rect(0, 0, 570, 190), "RandomIndex", style))
+        //{
+        //    _roamType = RoamingType.RandomIndex;
+        //}
+        //if (GUI.Button(new Rect(0, 190, 570, 190), "Inorder", style))
+        //{
+        //    _roamType = RoamingType.Inorder;
+        //}
+        //if (GUI.Button(new Rect(0, 380, 570, 190), "BackNForth", style))
+        //{
+        //    _roamType = RoamingType.BackNForth;
+        //}
         //if (GUI.Button(new Rect(0, 0, 570, 190), "Idle", style))
         //{
         //    animatorChange(PlayerAnimState.init);

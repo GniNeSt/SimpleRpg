@@ -25,7 +25,7 @@ public class DamageCheckerObj : MonoBehaviour
         }
         if (other.CompareTag("Monster"))
         {
-
+            other.GetComponent<MonsterCtrlObj>().OnHitting(transform.parent.GetComponentInParent<PlayerCtrlObj>());
         }
         if (other.CompareTag("Player"))
         {
