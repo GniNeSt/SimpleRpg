@@ -1,4 +1,4 @@
 Index∫StageName∫MapName∫Rank∫Size∫MapScene∫OptsName∫GenMonsterID1
-1∫모험의 시작∫Map1∫Very Easy∫Small∫Story1∫OptsName1∫1001
-2∫라이벌 등장∫Map2∫Easy∫Big∫Story2∫OptsName2∫1001
+1∫모험의 시작∫Map1∫Very Easy∫Small∫StartsIslandWest∫OptsName1∫1001
+2∫라이벌 등장∫Map2∫Easy∫Big∫StartsIslandSouth∫OptsName2∫1001
 3∫새로운 만남∫Map3∫Normal∫Small∫Story3∫OptsName3∫1001

@@ -18,7 +18,7 @@ public class SceneControlManager : TSingleTon<SceneControlManager>
         _CurrentScene = SceneName.IngameScene;
     }
 
-    IEnumerator LoadingScene(SceneName Scene, int stageIndex = 0)
+    IEnumerator LoadingScene(SceneName Scene, int stageIndex = 1)
     {
         AsyncOperation aOper;
         //씬로드
@@ -40,18 +40,25 @@ public class SceneControlManager : TSingleTon<SceneControlManager>
             }
             Scene active = SceneManager.GetSceneByName(mapScene);
             SceneManager.SetActiveScene(active);
+
+
+            //맵 데이터 설정
+            GameObject mapRoot = GameObject.FindGameObjectWithTag("MapRoot");
+
+            string stageName = TableManager._instance.Get(TableName.StageInfoTable).ToString(stageIndex, mapScene);
+            GameObject go = Resources.Load("Prefabs/Maps/" + stageName) as GameObject;
+            Transform pSpawnPoint = go.transform.GetChild(0);
+            Instantiate(go, mapRoot.transform);
+
+            //Player, MonsterSpawn
+            go = Resources.Load("Prefabs/Objects/PlayerObj") as GameObject;
+            Instantiate(go, pSpawnPoint.position, Quaternion.identity);
+            go = Resources.Load("Prefabs/Opts/OptsStage1") as GameObject;
+            Instantiate(go, mapRoot.transform);
+
+
+            //progress 체크
         }
 
-        //맵 데이터 설정
-        if (SceneName.IngameScene == Scene)
-        {
-            aOper = SceneManager.LoadSceneAsync(mapScene, LoadSceneMode.Additive);
-            while (!aOper.isDone)
-            {
-                yield return null;
-            }
-            Scene active = SceneManager.GetSceneByName(mapScene);
-            SceneManager.SetActiveScene(active);
-        }
     }
 }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace DefineEnums
 {
+    public enum mapName
+    {        
+        StartsIslandWest            =1,
+        StartsIslandSouth
+    }
     public enum SceneName
     {
         IngameScene,

@@ -11,6 +11,5 @@ public class IngameManager : MonoBehaviour
 
         //Debug.Log(TableManager._instance.Get(TableName.MonsterInfoTable).ToString(1001, "Name"));
 
-        //Player, MonsterSpawn
     }
 }
