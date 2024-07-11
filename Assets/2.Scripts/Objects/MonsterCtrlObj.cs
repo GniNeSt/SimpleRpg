@@ -287,6 +287,7 @@ public class MonsterCtrlObj : CharacterBase
         if(_nowHp <= 0)
         {
             animatorChange(PlayerAnimState.DEATH);
+            gameObject.GetComponent<BoxCollider>().enabled = false;
             Destroy(gameObject, 4f);
         }
     }

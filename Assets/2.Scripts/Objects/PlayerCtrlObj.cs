@@ -18,7 +18,7 @@ public class PlayerCtrlObj : CharacterBase
     Animator _animator;
     PlayerAnimState _curAnimState;
 
-    [SerializeField]float _curTime, _nIdleTime;
+    [SerializeField] float _curTime, _nIdleTime;
     bool _animChange, _isDead;
 
 
@@ -75,11 +75,11 @@ public class PlayerCtrlObj : CharacterBase
             {
                 case PlayerAnimState.IDLE:
                     _animator.SetBool("Idle", true);
-                    
+
                     break;
                 case PlayerAnimState.RUN:
                     _navAgent.speed = _moveSpeed;
-                    if(_target == null)
+                    if (_target == null)
                         _navAgent.stoppingDistance = 0;
                     else
                     {
@@ -92,15 +92,22 @@ public class PlayerCtrlObj : CharacterBase
                     if (_navAgent.remainingDistance < _navAgent.stoppingDistance + 0.1f)
                     {
                         //Debug.Log("stop");
-                        if (_target == null)
+                        if (_target.GetComponent<BoxCollider>() == null)
                             InitAnim(PlayerAnimState.IDLE);
                         else
                             InitAnim(PlayerAnimState.ATTACK);
                     }
                     break;
                 case PlayerAnimState.ATTACK:
-                    transform.LookAt(_target);
-                    _animator.SetTrigger("Attack");
+                    if (_target.GetComponent<BoxCollider>() == null)
+                    {
+                        InitAnim(PlayerAnimState.IDLE);
+                    }
+                    else
+                    {
+                        transform.LookAt(_target);
+                        _animator.SetTrigger("Attack");
+                    }
                     break;
                 case PlayerAnimState.SKILL:
                     _animator.SetTrigger("Skill");
@@ -122,7 +129,7 @@ public class PlayerCtrlObj : CharacterBase
         {
             RaycastHit rHit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out rHit, Mathf.Infinity, _pickMask))
+            if (Physics.Raycast(ray, out rHit, Mathf.Infinity, _pickMask))
             {
                 //Debug.Log(rHit.point);
                 string layName = LayerMask.LayerToName(rHit.transform.gameObject.layer);
@@ -135,7 +142,7 @@ public class PlayerCtrlObj : CharacterBase
                 else if (layName.CompareTo("Monster") == 0)
                 {
                     _target = rHit.transform;
-                    if(Vector3.Distance(transform.position, _target.position) > _attackDist)
+                    if (Vector3.Distance(transform.position, _target.position) > _attackDist)
                     {
                         _navAgent.SetDestination(rHit.point);
                         InitAnim(PlayerAnimState.RUN);
@@ -151,7 +158,7 @@ public class PlayerCtrlObj : CharacterBase
 
         }
 
-        
+
         //
         if (_curAnimState == PlayerAnimState.IDLE)
         {
@@ -190,11 +197,11 @@ public class PlayerCtrlObj : CharacterBase
         InitSetStat(UserInfoManager._instance._nowAvatarInfo);
         _currentXp = UserInfoManager._instance._nowAvatarInfo._nowXp;
 
-        _pickMask = 1 << LayerMask.NameToLayer("Road")|1<<LayerMask.NameToLayer("Monster");
+        _pickMask = 1 << LayerMask.NameToLayer("Road") | 1 << LayerMask.NameToLayer("Monster");
         _pickMask |= 1 << LayerMask.NameToLayer("Architecture");
 
         _damCheckers = new DamageCheckerObj[_rootDam.childCount];
-        for(int i = 0; i < _rootDam.childCount; i++)
+        for (int i = 0; i < _rootDam.childCount; i++)
         {
             _damCheckers[i] = _rootDam.GetChild(i).GetComponent<DamageCheckerObj>();
             _damCheckers[i].InitSet(i, this);
@@ -225,7 +232,7 @@ public class PlayerCtrlObj : CharacterBase
         _animator.ResetTrigger("Skill");
         _animator.ResetTrigger("Death");
     }
-    void InitAnim( PlayerAnimState animState )
+    void InitAnim(PlayerAnimState animState)
     {
         ResetAnim();
         _curAnimState = animState;
