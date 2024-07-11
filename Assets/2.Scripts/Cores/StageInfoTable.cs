@@ -14,6 +14,7 @@ public class StageInfoTable : TableBase
         Size,
         MapScene,
         OptsName,
+        GenMonsterID1,
 
         max
     }

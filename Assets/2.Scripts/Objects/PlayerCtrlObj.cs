@@ -92,14 +92,14 @@ public class PlayerCtrlObj : CharacterBase
                     if (_navAgent.remainingDistance < _navAgent.stoppingDistance + 0.1f)
                     {
                         //Debug.Log("stop");
-                        if (_target.GetComponent<BoxCollider>() == null)
+                        if (_target == null)
                             InitAnim(PlayerAnimState.IDLE);
                         else
                             InitAnim(PlayerAnimState.ATTACK);
                     }
                     break;
                 case PlayerAnimState.ATTACK:
-                    if (_target.GetComponent<BoxCollider>() == null)
+                    if (_target == null)
                     {
                         InitAnim(PlayerAnimState.IDLE);
                     }

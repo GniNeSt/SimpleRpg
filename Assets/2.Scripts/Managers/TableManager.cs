@@ -43,7 +43,7 @@ public class TableManager : TSingleTon<TableManager>
         }
         if (Load<MonsterInfoTable>(TableName.MonsterInfoTable) == null)
         {
-            Debug.LogError(TableName.StageInfoTable + "로드 실패!!");
+            Debug.LogError(TableName.MonsterInfoTable + "로드 실패!!");
         }
     }
     public TableBase Get(TableName name)

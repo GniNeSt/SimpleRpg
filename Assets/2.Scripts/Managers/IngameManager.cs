@@ -6,9 +6,11 @@ public class IngameManager : MonoBehaviour
 {
     private void Awake()
     {
-        TableManager._instance.LoadAll();
-        UserInfoManager._instance.SettingPlayerAvatar(null);
+        //TableManager._instance.LoadAll();
+        //UserInfoManager._instance.SettingPlayerAvatar(null);
 
-        Debug.Log(TableManager._instance.Get(TableName.MonsterInfoTable).ToString(1001, "Name"));
+        //Debug.Log(TableManager._instance.Get(TableName.MonsterInfoTable).ToString(1001, "Name"));
+
+        //Player, MonsterSpawn
     }
 }

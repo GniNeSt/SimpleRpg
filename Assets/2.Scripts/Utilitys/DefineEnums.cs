@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace DefineEnums
 {
+    public enum SceneName
+    {
+        IngameScene,
+    }
     public enum TableName
     {
         LevelUpTable,
